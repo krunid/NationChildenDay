@@ -175,20 +175,29 @@
     }
 
 // แสดงคำถาม
+
 function show() {
-    if(i >= n) {
+    if (i >= n) {
         end();
         return;
     }
-    document.getElementById('prog').style.width = ((i+1)/n*100) + "%";
-    document.getElementById('quiz').innerHTML = 
+
+    // อัปเดตความกว้างของ progress bar
+    document.getElementById('prog').style.width = ((i + 1) / n * 100) + "%";
+
+    // สร้าง HTML ของคำถามโดยใช้ template string
+    const questionHTML = `
         <div class="question">
-            <h3>ข้อที่ ${i+1}</h3>
+            <h3>ข้อที่ ${i + 1}</h3>
             <p>${q[i].q}</p>
-            ${q[i].o.map((x,j)=><div class="option" onclick="pick(${j})">${x}</div>).join('')}
+            ${q[i].o.map((x, j) => `<div class="option" onclick="pick(${j})">${x}</div>`).join('')}
         </div>
-    ;
+    `;
+
+    // ใส่ HTML ลงใน element ที่มี id "quiz"
+    document.getElementById('quiz').innerHTML = questionHTML;
 }
+
 
 // เลือกคำตอบ
 function pick(x) {
