@@ -7,6 +7,19 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&display=swap" rel="stylesheet">
+       <!-- เพิ่ม Font Thai -->
+    <script>
+        pdfMake.fonts = {
+            THSarabun: {
+                normal: 'THSarabun.ttf',
+                bold: 'THSarabun-Bold.ttf',
+                italics: 'THSarabun-Italic.ttf',
+                bolditalics: 'THSarabun-BoldItalic.ttf'
+            }
+        }
+    </script>
+
+
     <styles>
         * {
     margin: 0;
@@ -339,15 +352,7 @@ function cert(fromQuiz=false) {
     `;
 }
 
-// ดาวน์โหลดเกียรติบัตร PDF
 function downloadCert() {
-    pdfMake.fonts = {
-        Sarabun: {
-            normal: 'https://fonts.googleapis.com/css2?family=Sarabun:wght@400',
-            bold: 'https://fonts.googleapis.com/css2?family=Sarabun:wght@700'
-        }
-    };
-
     const docDefinition = {
         pageSize: 'A4',
         pageOrientation: 'landscape',
@@ -395,7 +400,7 @@ function downloadCert() {
             }
         ],
         defaultStyle: {
-            font: 'Sarabun'
+            fontSize: 16
         },
         styles: {
             header: {
