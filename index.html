@@ -72,6 +72,14 @@
           { text: `ขอมอบให้แก่ผู้ที่ผ่านแบบทดสอบวันเด็กแห่งชาติ`, style: 'subheader' },
           { text: `คะแนนที่ได้: ${score}/${totalQuestions}`, style: 'content' }
         ],
+        // Define Thai fonts
+  pdfMake.fonts = {
+    THSarabunNew: {
+      normal: 'https://sanwithz.github.io/font/THSarabunNew.ttf',
+      bold: 'https://sanwithz.github.io/font/THSarabunNewBold.ttf',
+      italics: 'https://sanwithz.github.io/font/THSarabunNewItalic.ttf',
+    }
+  },
         styles: {
           header: { fontSize: 22, bold: true, alignment: 'center', margin: [0, 20, 0, 10] },
           subheader: { fontSize: 16, alignment: 'center', margin: [0, 10, 0, 20] },
