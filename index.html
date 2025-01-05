@@ -41,6 +41,22 @@
     </style>
 </head>
 <body>
+    <div class="modal" id="nameModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>ยินดีต้อนรับ</h2>
+            </div>
+            <div class="modal-body">
+                <div class="input-group">
+                    <label for="studentName">กรุณากรอกชื่อ-นามสกุล</label>
+                    <input type="text" id="studentName" placeholder="เช่น สมชาย ใจดี">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" onclick="startQuiz()">เริ่มทำแบบทดสอบ</button>
+            </div>
+        </div>
+    </div>
     <div class="container">
         <div class="header">
             <h1>แบบทดสอบวันเด็กแห่งชาติ</h1>
@@ -66,8 +82,18 @@ const q=[
     {q:"วันเด็กสากลคือ?",o:["1 มิถุนายน","20 พฤศจิกายน","5 ธันวาคม","25 ธันวาคม"],c:0},
     {q:"เด็กคืออายุเท่าไร?",o:["<15","<18","<20","<21"],c:1}
 ],n=q.length;
-let i=0,s=0,ans=[];
-const name=prompt("ชื่อ-สกุล:")||"ผู้ทดสอบ";
+let i=0,s=0,ans=[],name='';
+
+function init() {
+    document.getElementById('nameModal').style.display = 'block';
+}
+
+function startQuiz() {
+    const input = document.getElementById('studentName');
+    name = input.value.trim() || 'ผู้ทดสอบ';
+    document.getElementById('nameModal').style.display = 'none';
+    show();
+}
 function show(){
     if(i>=n){end();return;}
     document.getElementById('prog').style.width=((i+1)/n*100)+"%";
