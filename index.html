@@ -325,9 +325,17 @@ function downloadCert() {
             }
         ],
         defaultStyle: {
-            font: 'Helvetica',
+            font: 'THSarabunNew',
             fontSize: 16
         },
+            // Define Thai fonts
+  pdfMake.fonts = {
+    THSarabunNew: {
+      normal: 'https://sanwithz.github.io/font/THSarabunNew.ttf',
+      bold: 'https://sanwithz.github.io/font/THSarabunNewBold.ttf',
+      italics: 'https://sanwithz.github.io/font/THSarabunNewItalic.ttf',
+    }
+  };
         styles: {
             header: {
                 fontSize: 28,
