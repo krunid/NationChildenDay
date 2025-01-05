@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/papaparse/5.3.0/papaparse.min.js"></script>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;font-family:sans-serif;}
+        body{background:#f0f2f5;padding:20px;}
+        .container{max-width:800px;margin:auto;background:white;padding:20px;border-radius:10px;}
+        .header{text-align:center;margin-bottom:20px;}
+        .progress{width:100%;height:20px;background:#ddd;margin:10px 0;border-radius:10px;}
+        .progress div{height:100%;background:#4CAF50;border-radius:10px;transition:0.3s;}
+        .question{background:#f8f9fa;padding:15px;border-radius:8px;margin:10px 0;}
+        .option{padding:10px;margin:5px 0;border:1px solid #ddd;border-radius:5px;cursor:pointer;}
+        .option:hover{background:#f0f0f0;}
+        .correct{background:#4CAF50;color:white;}
+        .incorrect{background:#f44336;color:white;}
+        .btn{padding:10px 20px;background:#4CAF50;color:white;border:none;border-radius:5px;cursor:pointer;margin:5px;}
+        .result{text-align:center;margin-top:20px;}
+        .compare{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0;}
+        .score-display{
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            z-index: 1000;
+        }
+        .score-number{
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        @media (max-width:600px){.compare{grid-template-columns:1fr;}}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>แบบทดสอบวันเด็กแห่งชาติ</h1>
+            <h2>ระดับประถมศึกษา</h2>
+        </div>
+        <div class="progress"><div id="prog"></div></div>
+        <div id="quiz"></div>
+        <div id="result" style="display:none;"></div>
+    </div>
+    <div id="score" class="score-display">
+        คะแนน: <span class="score-number">0/10</span>
+    </div>
+<script>
+const q=[
+    {q:"วันเด็กตรงกับวันใด?",o:["เสาร์ที่2 มกราคม","อาทิตย์ที่2","เสาร์แรก","อาทิตย์แรก"],c:0},
+    {q:"คำขวัญวันเด็กแห่งชาติ 2568 จากนายกรัฐมนตรี?",o:["รู้คิด รู้เท่าทัน สร้างสรรค์สิ่งใหม่ เรียนรู้ตลอดเวลา พัฒนาอย่างยั่งยืน","เรียนรู้ตลอดเวลา พัฒนา รู้เท่าทัน สร้างสรรค์อนาคต","เรียนรู้ คู่คุณธรรม เท่าทันเทคโนโลยี มีจิตอาสา พัฒนาสังคม","เด็กไทยยุคใหม่ เรียนรู้อย่างเข้าใจ ก้าวไกลสู่อนาคต"],c:0},
+    {q:"เริ่มจัดครั้งแรกปีใด?",o:["2498","2499","2500","2501"],c:0},
+    {q:"ที่ใดเปิดฟรี?",o:["สวนสัตว์","พิพิธภัณฑ์","ทำเนียบ","ทุกข้อ"],c:3},
+    {q:"กิจกรรมประจำ?",o:["ดนตรี","ตอบปัญหา","นิทรรศการ","ทุกข้อ"],c:3},
+    {q:"สิทธิพื้นฐานมีกี่ข้อ?",o:["2","3","4","5"],c:2},
+    {q:"ข้อใดไม่ใช่สิทธิ?",o:["มีชีวิต","พัฒนา","ปกป้อง","ขับรถ"],c:3},
+    {q:"ใครจัดงาน?",o:["กระทรวงศึกษาธิการ","กระทรวงวัฒนธรรม","กระทรวงการพัฒนาสังคมและความมั่นคงของมนุษย์","กระทรวงมหาดไทย"],c:0},
+    {q:"วันเด็กสากลคือ?",o:["1มิ.ย.","20พ.ย.","5ธ.ค.","25ธ.ค."],c:1},
+    {q:"เด็กคืออายุเท่าไร?",o:["<15","<18","<20","<21"],c:1}
+],n=q.length;
+let i=0,s=0,ans=[];
+const name=prompt("ชื่อ-สกุล:")||"ผู้ทดสอบ";
+function show(){
+    if(i>=n){end();return;}
+    document.getElementById('prog').style.width=((i+1)/n*100)+"%";
+    document.getElementById('quiz').innerHTML=`
+        <div class="question">
+            <h3>ข้อ ${i+1}</h3>
+            <p>${q[i].q}</p>
+            ${q[i].o.map((x,j)=>`<div class="option" onclick="pick(${j})">${x}</div>`).join('')}
+        </div>`;
+}
+function pick(x){
+    const o=document.getElementsByClassName('option');
+    ans[i]=x;
+    q[i].o.forEach((_,j)=>{
+        if(j===q[i].c)o[j].classList.add('correct');
+        else if(j===x)o[j].classList.add('incorrect');
+    });
+    if(x===q[i].c)s++;
+    document.querySelector('.score-number').textContent = `${s}/${n}`;
+    setTimeout(()=>{i++;show();},1000);
+}
+function end(){
+    const p=s/n*100;
+    document.getElementById('quiz').style.display='none';
+    document.getElementById('result').style.display='block';
+    document.getElementById('result').innerHTML=`
+        <h2>ผลการทดสอบ</h2>
+        <p>คุณ ${name}</p>
+        <p>ได้ ${s}/${n} (${p}%)</p>
+        ${p>=70?`
+            <button class="btn" onclick="cert()">รับเกียรติบัตร</button>
+        `:`
+            <button class="btn" onclick="location.reload()">เริ่มใหม่</button>
+        `}
+        <button class="btn" onclick="compare()">เปรียบเทียบคำตอบ</button>`;
+}
+function cert(){
+    pdfMake.createPdf({
+        pageSize:'A4',
+        pageOrientation:'landscape',
+        content:[
+            {text:'เกียรติบัตร',alignment:'center',fontSize:28,margin:[0,50,0,20]},
+            {text:`${name}`,alignment:'center',fontSize:20,margin:[0,20]},
+            {text:'ผ่านการทดสอบวันเด็กแห่งชาติ',alignment:'center',fontSize:16},
+            {text:`คะแนน ${s}/${n}`,alignment:'center',margin:[0,20]},
+            {text:new Date().toLocaleDateString(),alignment:'center'}
+        ]
+    }).download();
+}
+function compare(){
+    document.getElementById('result').innerHTML=`
+        <h2>เปรียบเทียบคำตอบ</h2>
+        ${q.map((x,j)=>`
+            <div class="question">
+                <p><b>ข้อ ${j+1}:</b> ${x.q}</p>
+                <div class="compare">
+                    <div class="compare-item your-answer">
+                        <h4>คำตอบของคุณ</h4>
+                        <p>${x.o[ans[j]]}</p>
+                        <p>${ans[j]===x.c?'✓ ถูกต้อง':'✗ ไม่ถูกต้อง'}</p>
+                    </div>
+                    <div class="compare-item correct-answer">
+                        <h4>เฉลย</h4>
+                        <p>${x.o[x.c]}</p>
+                    </div>
+                </div>
+            </div>
+        `).join('')}
+        <button class="btn" onclick="location.reload()">เริ่มใหม่</button>`;
+}
+show();
+</script>
+</body>
+</html>
