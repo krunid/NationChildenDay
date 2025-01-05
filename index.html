@@ -53,18 +53,6 @@
     <div id="score" class="score-display">
         คะแนน: <span class="score-number">0/10</span>
     </div>
-    <div id="certOverlay" class="certificate-overlay">
-        <div class="certificate">
-            <button class="close-cert" onclick="closeCert()">×</button>
-            <h1>เกียรติบัตร</h1>
-            <p>ขอมอบเกียรติบัตรฉบับนี้เพื่อแสดงว่า</p>
-            <h2 id="certName"></h2>
-            <p>ได้ผ่านการทดสอบ</p>
-            <h3>แบบทดสอบวันเด็กแห่งชาติ</h3>
-            <p>ด้วยคะแนน <span id="certScore"></span></p>
-            <p class="date" id="certDate"></p>
-        </div>
-    </div>
 <script>
 const q=[
     {q:"วันเด็กตรงกับวันใด?",o:["เสาร์ที่2 มกราคม","อาทิตย์ที่2","เสาร์แรก","อาทิตย์แรก"],c:0},
@@ -75,7 +63,7 @@ const q=[
     {q:"สิทธิพื้นฐานมีกี่ข้อ?",o:["2","3","4","5"],c:2},
     {q:"ข้อใดไม่ใช่สิทธิ?",o:["มีชีวิต","พัฒนา","ปกป้อง","ขับรถ"],c:3},
     {q:"ใครจัดงาน?",o:["กระทรวงศึกษาธิการ","กระทรวงวัฒนธรรม","กระทรวงการพัฒนาสังคมและความมั่นคงของมนุษย์","กระทรวงมหาดไทย"],c:0},
-    {q:"วันเด็กสากลคือ?",o:["20พ.ย.","1มิ.ย.","5ธ.ค.","25ธ.ค."],c:0},
+    {q:"วันเด็กสากลคือ?",o:["1 มิถุนายน","20 พฤศจิกายน","5 ธันวาคม","25 ธันวาคม"],c:0},
     {q:"เด็กคืออายุเท่าไร?",o:["<15","<18","<20","<21"],c:1}
 ],n=q.length;
 let i=0,s=0,ans=[];
@@ -117,19 +105,26 @@ function end(){
         <button class="btn" onclick="compare()">เปรียบเทียบคำตอบ</button>`;
 }
 function cert(){
-    document.getElementById('certOverlay').style.display = 'flex';
-    document.getElementById('certName').textContent = name;
-    document.getElementById('certScore').textContent = `${s} / ${n} (${(s/n*100).toFixed(2)}%)`;
-    document.getElementById('certDate').textContent = new Date().toLocaleDateString('th-TH', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-    });
-}
-
-function closeCert() {
-    document.getElementById('certOverlay').style.display = 'none';
-}
+    const cert = document.getElementById('result');
+    cert.innerHTML = `
+        <div style="background: #fff; padding: 40px; margin: 20px auto; max-width: 800px; border: 2px solid #4CAF50; border-radius: 10px;">
+            <h1 style="text-align: center; color: #2E7D32; margin-bottom: 30px;">เกียรติบัตร</h1>
+            <h2 style="text-align: center; margin: 20px 0;">ขอมอบเกียรติบัตรฉบับนี้ให้แก่</h2>
+            <h2 style="text-align: center; color: #1B5E20; margin: 20px 0;">${name}</h2>
+            <p style="text-align: center; font-size: 1.2em; margin: 20px 0;">ได้ผ่านการทดสอบความรู้เรื่อง "วันเด็กแห่งชาติ"</p>
+            <p style="text-align: center; font-size: 1.2em; margin: 20px 0;">ด้วยคะแนน ${s} คะแนน จากทั้งหมด ${n} คะแนน</p>
+            <p style="text-align: center; font-size: 1.2em; margin: 20px 0;">คิดเป็นร้อยละ ${((s/n)*100).toFixed(2)}</p>
+            <p style="text-align: center; margin-top: 40px;">ให้ไว้ ณ วันที่ ${new Date().toLocaleDateString('th-TH', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            })}</p>
+        </div>
+        <div style="text-align: center; margin-top: 20px;">
+            <button class="btn" onclick="compare()">ดูเฉลย</button>
+            <button class="btn" onclick="location.reload()">เริ่มใหม่</button>
+        </div>
+    `;
 }
 function compare(){
     document.getElementById('result').innerHTML=`
