@@ -53,6 +53,18 @@
     <div id="score" class="score-display">
         คะแนน: <span class="score-number">0/10</span>
     </div>
+    <div id="certOverlay" class="certificate-overlay">
+        <div class="certificate">
+            <button class="close-cert" onclick="closeCert()">×</button>
+            <h1>เกียรติบัตร</h1>
+            <p>ขอมอบเกียรติบัตรฉบับนี้เพื่อแสดงว่า</p>
+            <h2 id="certName"></h2>
+            <p>ได้ผ่านการทดสอบ</p>
+            <h3>แบบทดสอบวันเด็กแห่งชาติ</h3>
+            <p>ด้วยคะแนน <span id="certScore"></span></p>
+            <p class="date" id="certDate"></p>
+        </div>
+    </div>
 <script>
 const q=[
     {q:"วันเด็กตรงกับวันใด?",o:["เสาร์ที่2 มกราคม","อาทิตย์ที่2","เสาร์แรก","อาทิตย์แรก"],c:0},
@@ -63,7 +75,7 @@ const q=[
     {q:"สิทธิพื้นฐานมีกี่ข้อ?",o:["2","3","4","5"],c:2},
     {q:"ข้อใดไม่ใช่สิทธิ?",o:["มีชีวิต","พัฒนา","ปกป้อง","ขับรถ"],c:3},
     {q:"ใครจัดงาน?",o:["กระทรวงศึกษาธิการ","กระทรวงวัฒนธรรม","กระทรวงการพัฒนาสังคมและความมั่นคงของมนุษย์","กระทรวงมหาดไทย"],c:0},
-    {q:"วันเด็กสากลคือ?",o:["1มิ.ย.","20พ.ย.","5ธ.ค.","25ธ.ค."],c:1},
+    {q:"วันเด็กสากลคือ?",o:["20พ.ย.","1มิ.ย.","5ธ.ค.","25ธ.ค."],c:0},
     {q:"เด็กคืออายุเท่าไร?",o:["<15","<18","<20","<21"],c:1}
 ],n=q.length;
 let i=0,s=0,ans=[];
@@ -105,17 +117,19 @@ function end(){
         <button class="btn" onclick="compare()">เปรียบเทียบคำตอบ</button>`;
 }
 function cert(){
-    pdfMake.createPdf({
-        pageSize:'A4',
-        pageOrientation:'landscape',
-        content:[
-            {text:'เกียรติบัตร',alignment:'center',fontSize:28,margin:[0,50,0,20]},
-            {text:`${name}`,alignment:'center',fontSize:20,margin:[0,20]},
-            {text:'ผ่านการทดสอบวันเด็กแห่งชาติ',alignment:'center',fontSize:16},
-            {text:`คะแนน ${s}/${n}`,alignment:'center',margin:[0,20]},
-            {text:new Date().toLocaleDateString(),alignment:'center'}
-        ]
-    }).download();
+    document.getElementById('certOverlay').style.display = 'flex';
+    document.getElementById('certName').textContent = name;
+    document.getElementById('certScore').textContent = `${s} / ${n} (${(s/n*100).toFixed(2)}%)`;
+    document.getElementById('certDate').textContent = new Date().toLocaleDateString('th-TH', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    });
+}
+
+function closeCert() {
+    document.getElementById('certOverlay').style.display = 'none';
+}
 }
 function compare(){
     document.getElementById('result').innerHTML=`
