@@ -9,193 +9,113 @@
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&display=swap" rel="stylesheet">
 <style>
     * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Sarabun', sans-serif;
-}
-
-body {
-    background: #f0f2f5;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-}
-
-.modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.5);
-    z-index: 1001;
-}
-
-.modal-content {
-    background: white;
-    width: 90%;
-    max-width: 500px;
-    margin: 100px auto;
-    padding: 30px;
-    border-radius: 15px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-    animation: slideIn 0.3s ease-out;
-}
-
-.modal-header {
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-.modal-body {
-    margin-bottom: 20px;
-}
-
-.input-group {
-    margin-bottom: 15px;
-}
-
-.input-group label {
-    display: block;
-    margin-bottom: 5px;
-    color: #666;
-}
-
-.input-group input {
-    width: 100%;
-    padding: 12px;
-    border: 2px solid #ddd;
-    border-radius: 8px;
-    font-size: 16px;
-    transition: all 0.3s;
-}
-
-.input-group input:focus {
-    border-color: #4CAF50;
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
-}
-
-.modal-footer {
-    text-align: center;
-}
-
-.quiz-screen {
-    background: white;
-    padding: 30px;
-    border-radius: 15px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    max-width: 800px;
-    width: 100%;
-    display: none;
-}
-
-.btn {
-    background: #4CAF50;
-    color: white;
-    border: none;
-    padding: 12px 30px;
-    border-radius: 8px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: all 0.3s;
-    margin: 10px;
-}
-
-.btn:hover {
-    background: #45a049;
-    transform: translateY(-2px);
-}
-
-.progress {
-    width: 100%;
-    height: 20px;
-    background: #ddd;
-    border-radius: 10px;
-    margin: 20px 0;
-    overflow: hidden;
-}
-
-.progress div {
-    height: 100%;
-    background: #4CAF50;
-    transition: width 0.3s;
-    border-radius: 10px;
-}
-
-.question {
-    background: #f8f9fa;
-    padding: 20px;
-    border-radius: 10px;
-    margin: 20px 0;
-}
-
-.option {
-    background: white;
-    padding: 12px 20px;
-    margin: 8px 0;
-    border: 2px solid #ddd;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.3s;
-}
-
-.option:hover {
-    border-color: #4CAF50;
-    transform: translateX(5px);
-}
-
-.correct {
-    background: #4CAF50;
-    color: white;
-    border-color: #4CAF50;
-}
-
-.incorrect {
-    background: #f44336;
-    color: white;
-    border-color: #f44336;
-}
-
-.score-display {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    background: #4CAF50;
-    color: white;
-    padding: 10px 20px;
-    border-radius: 50px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-}
-
-@keyframes slideIn {
-    from {
-        transform: translateY(-100px);
-        opacity: 0;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Sarabun', sans-serif;
     }
-    to {
-        transform: translateY(0);
-        opacity: 1;
-    }
-}
 
-@media (max-width: 600px) {
-    .modal-content {
-        margin: 50px auto;
+    body {
+        background: #f0f2f5;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         padding: 20px;
     }
-    .btn {
+
+    .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
         width: 100%;
-        margin: 5px 0;
+        height: 100%;
+        background: rgba(0,0,0,0.5);
+        z-index: 1001;
     }
-}
+
+    .modal-content {
+        background: white;
+        width: 90%;
+        max-width: 500px;
+        margin: 100px auto;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        animation: slideIn 0.3s ease-out;
+    }
+
+    .modal-header {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .modal-body {
+        margin-bottom: 20px;
+    }
+
+    .modal-footer {
+        text-align: center;
+    }
+
+    .btn {
+        background: #4CAF50;
+        color: white;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 8px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: all 0.3s;
+        margin: 10px;
+    }
+
+    .btn:hover {
+        background: #45a049;
+        transform: translateY(-2px);
+    }
+
+    @keyframes slideIn {
+        from {
+            transform: translateY(-100px);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+    @media (max-width: 600px) {
+        .modal-content {
+            margin: 50px auto;
+            padding: 20px;
+        }
+
+        .btn {
+            width: 100%;
+            margin: 5px 0;
+        }
+    }
 </style>
 </head>
 <body>
+    <!-- Popup Modal -->
+    <div id="popup" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="popup-title">แจ้งเตือน</h2>
+            </div>
+            <div class="modal-body">
+                <p id="popup-message">ข้อความแจ้งเตือน</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" onclick="closePopup()">ตกลง</button>
+            </div>
+        </div>
+    </div>
+
     <div class="modal" id="nameModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -218,48 +138,41 @@ body {
         <div id="quiz"></div>
         <div id="result" style="display:none;"></div>
     </div>
+
 <script>
-    // ข้อสอบ
-const q = [
-    {q:"วันเด็กตรงกับวันใด?",o:["เสาร์ที่2 มกราคม","อาทิตย์ที่2 มกราคม","เสาร์แรก มกราคม","อาทิตย์แรก มกราคม"],c:0},
-    {q:"คำขวัญวันเด็กแห่งชาติ 2568 จากนายกรัฐมนตรี?",o:["รู้คิด รู้เท่าทัน สร้างสรรค์สิ่งใหม่ เรียนรู้ตลอดเวลา พัฒนาอย่างยั่งยืน","เรียนรู้ตลอดเวลา พัฒนา รู้เท่าทัน สร้างสรรค์อนาคต","เรียนรู้ คู่คุณธรรม เท่าทันเทคโนโลยี มีจิตอาสา พัฒนาสังคม","เด็กไทยยุคใหม่ เรียนรู้อย่างเข้าใจ ก้าวไกลสู่อนาคต"],c:0},
-    {q:"วันเด็กแห่งชาติของไทยเริ่มจัดครั้งแรกปีใด?",o:["2498","2499","2500","2501"],c:0},
-    {q:"สถานที่ใดที่เปิดให้เด็กเข้าชมฟรีในวันเด็กแห่งชาติ?",o:["สวนสัตว์","พิพิธภัณฑ์","ทำเนียบรัฐบาล","ถูกทุกข้อ"],c:3},
-    {q:"กิจกรรมใดที่มักจัดเป็นประจำในวันเด็กแห่งชาติ?",o:["การแสดงดนตรี","การแข่งขันตอบปัญหา","การจัดนิทรรศการ","ถูกทุกข้อ"],c:3},
-    {q:"สิทธิขั้นพื้นฐานของเด็กมีกี่ประการ?",o:["2 ประการ","3 ประการ","4 ประการ","5 ประการ"],c:2},
-    {q:"ข้อใดไม่ใช่สิทธิขั้นพื้นฐานของเด็ก?",o:["สิทธิที่จะมีชีวิตรอด","สิทธิที่จะได้รับการพัฒนา","สิทธิที่จะได้รับการปกป้อง","สิทธิที่จะได้ขับรถ"],c:3},
-    {q:"หน่วยงานใดเป็นผู้รับผิดชอบหลักในการจัดงานวันเด็กแห่งชาติ?",o:["กระทรวงศึกษาธิการ","กระทรวงวัฒนธรรม","กระทรวงการพัฒนาสังคมและความมั่นคงของมนุษย์","กระทรวงมหาดไทย"],c:0},
-    {q:"วันเด็กสากลคือ?",o:["1 มิถุนายน","20 พฤศจิกายน","5 ธันวาคม","25 ธันวาคม"],c:0},
-    {q:"อายุเท่าไรจึงจะถือว่าเป็น 'เด็ก' ตามอนุสัญญาว่าด้วยสิทธิเด็ก?",o:["ต่ำกว่า 15 ปี","ต่ำกว่า 18 ปี","ต่ำกว่า 20 ปี","ต่ำกว่า 21 ปี"],c:1}
-];
-
-const n = q.length;
-let i = 0, s = 0, ans = [], name = '';
-
-// แสดง Modal ตอนโหลดหน้า
-window.onload = () => {
-    document.getElementById('nameModal').style.display = 'block';
-};
-
-// เริ่มทำแบบทดสอบ
-function startQuiz() {
-    name = document.getElementById('studentName').value.trim();
-    if(!name) {
-        alert('กรุณากรอกชื่อ-นามสกุล');
-        return;
+    // ฟังก์ชันสำหรับ Popup
+    function showPopup(message) {
+        document.getElementById('popup-message').textContent = message;
+        document.getElementById('popup').style.display = 'block';
     }
-    document.getElementById('nameModal').style.display = 'none';
-    document.getElementById('quizScreen').style.display = 'block';
 
-    // เพิ่มแถบคะแนน
-    const scoreDisplay = document.createElement('div');
-    scoreDisplay.id = 'score';
-    scoreDisplay.className = 'score-display';
-    scoreDisplay.innerHTML = `คะแนน: <span class="score-number">0/${n}</span>`;
-    document.body.appendChild(scoreDisplay);
+    function closePopup() {
+        document.getElementById('popup').style.display = 'none';
+    }
 
-    show();
-}
+    // คำถาม
+    const q = [
+        {q:"วันเด็กตรงกับวันใด?",o:["เสาร์ที่2 มกราคม","อาทิตย์ที่2 มกราคม","เสาร์แรก มกราคม","อาทิตย์แรก มกราคม"],c:0},
+        // เพิ่มคำถามอื่นๆ ที่นี่
+    ];
+
+    const n = q.length;
+    let i = 0, s = 0, ans = [], name = '';
+
+    window.onload = () => {
+        document.getElementById('nameModal').style.display = 'block';
+    };
+
+    function startQuiz() {
+        name = document.getElementById('studentName').value.trim();
+        if (!name) {
+            showPopup('กรุณากรอกชื่อ-นามสกุล');
+            return;
+        }
+        document.getElementById('nameModal').style.display = 'none';
+        document.getElementById('quizScreen').style.display = 'block';
+        show();
+    }
 
 // แสดงคำถาม
 function show() {
@@ -268,13 +181,13 @@ function show() {
         return;
     }
     document.getElementById('prog').style.width = ((i+1)/n*100) + "%";
-    document.getElementById('quiz').innerHTML = `
+    document.getElementById('quiz').innerHTML = 
         <div class="question">
             <h3>ข้อที่ ${i+1}</h3>
             <p>${q[i].q}</p>
-            ${q[i].o.map((x,j)=>`<div class="option" onclick="pick(${j})">${x}</div>`).join('')}
+            ${q[i].o.map((x,j)=><div class="option" onclick="pick(${j})">${x}</div>).join('')}
         </div>
-    `;
+    ;
 }
 
 // เลือกคำตอบ
@@ -286,7 +199,7 @@ function pick(x) {
         else if(j === x) options[j].classList.add('incorrect');
     });
     if(x === q[i].c) s++;
-    document.querySelector('.score-number').textContent = `${s}/${n}`;
+    document.querySelector('.score-number').textContent = ${s}/${n};
     setTimeout(() => {i++; show();}, 1500);
 }
 
@@ -296,18 +209,43 @@ function end() {
     document.getElementById('quiz').style.display = 'none';
     document.getElementById('score').style.display = 'none';
     document.getElementById('result').style.display = 'block';
-    document.getElementById('result').innerHTML = `
+    document.getElementById('result').innerHTML = 
         <h2>ผลการทดสอบ</h2>
         <p>คุณ ${name}</p>
         <p>ได้ ${s}/${n} คะแนน (${p.toFixed(2)}%)</p>
-        ${p>=70?`
+        ${p>=70?
             <button class="btn" onclick="cert(true)">แสดงเกียรติบัตร</button>
-        `:`
+        :
             <p style="color:#f44336">คุณได้คะแนนไม่ถึง 70% กรุณาลองใหม่</p>
             <button class="btn" onclick="location.reload()">เริ่มใหม่</button>
-        `}
+        }
         <button class="btn" onclick="compare()">เปรียบเทียบคำตอบ</button>
-    `;
+    ;
+}
+
+
+// เปรียบเทียบคำตอบ
+function compare() {
+    document.getElementById('result').innerHTML = 
+        <h2>เปรียบเทียบคำตอบ</h2>
+        ${q.map((x,j)=>
+            <div class="question">
+                <p><b>ข้อ ${j+1}:</b> ${x.q}</p>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0;">
+                    <div style="background:#fff3e0;padding:10px;border-radius:5px;">
+                        <h4>คำตอบของคุณ</h4>
+                        <p>${x.o[ans[j]]}</p>
+                        <p>${ans[j]===x.c?'✓ ถูกต้อง':'✗ ไม่ถูกต้อง'}</p>
+                    </div>
+                    <div style="background:#e8f5e9;padding:10px;border-radius:5px;">
+                        <h4>เฉลย</h4>
+                        <p>${x.o[x.c]}</p>
+                    </div>
+                </div>
+            </div>
+        ).join('')}
+        <button class="btn" onclick="location.reload()">เริ่มใหม่</button>
+    ;
 }
 
 // แสดงเกียรติบัตร
@@ -317,7 +255,7 @@ function cert(fromQuiz=false) {
         return;
     }
     const cert = document.getElementById('result');
-    cert.innerHTML = `
+    cert.innerHTML = 
         <div style="background:#fff;padding:40px;margin:20px auto;max-width:800px;border:2px solid #4CAF50;border-radius:10px;">
             <h1 style="text-align:center;color:#2E7D32;margin-bottom:30px;">เกียรติบัตร</h1>
             <h2 style="text-align:center;margin:20px 0;">ขอมอบเกียรติบัตรฉบับนี้ให้แก่</h2>
@@ -336,7 +274,7 @@ function cert(fromQuiz=false) {
             <button class="btn" onclick="compare()">เปรียบเทียบคำตอบ</button>
             <button class="btn" onclick="location.reload()">เริ่มใหม่</button>
         </div>
-    `;
+    ;
 }
 
 function downloadCert() {
@@ -367,12 +305,12 @@ function downloadCert() {
                 margin: [0, 20, 0, 10]
             },
             {
-                text: `ด้วยคะแนน ${s} คะแนน จากทั้งหมด ${n} คะแนน`,
+                text: ด้วยคะแนน ${s} คะแนน จากทั้งหมด ${n} คะแนน,
                 alignment: 'center',
                 margin: [0, 20, 0, 20]
             },
             {
-                text: `คิดเป็นร้อยละ ${((s/n)*100).toFixed(2)}`,
+                text: คิดเป็นร้อยละ ${((s/n)*100).toFixed(2)},
                 alignment: 'center',
                 margin: [0, 0, 0, 50]
             },
@@ -402,33 +340,8 @@ function downloadCert() {
         }
     };
 
-    pdfMake.createPdf(docDefinition).download(`certificate_${name}.pdf`);
+    pdfMake.createPdf(docDefinition).download(certificate_${name}.pdf);
 }
-
-// เปรียบเทียบคำตอบ
-function compare() {
-    document.getElementById('result').innerHTML = `
-        <h2>เปรียบเทียบคำตอบ</h2>
-        ${q.map((x,j)=>`
-            <div class="question">
-                <p><b>ข้อ ${j+1}:</b> ${x.q}</p>
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0;">
-                    <div style="background:#fff3e0;padding:10px;border-radius:5px;">
-                        <h4>คำตอบของคุณ</h4>
-                        <p>${x.o[ans[j]]}</p>
-                        <p>${ans[j]===x.c?'✓ ถูกต้อง':'✗ ไม่ถูกต้อง'}</p>
-                    </div>
-                    <div style="background:#e8f5e9;padding:10px;border-radius:5px;">
-                        <h4>เฉลย</h4>
-                        <p>${x.o[x.c]}</p>
-                    </div>
-                </div>
-            </div>
-        `).join('')}
-        <button class="btn" onclick="location.reload()">เริ่มใหม่</button>
-    `;
-}
-
-    </script>
+</script>
 </body>
 </html>
