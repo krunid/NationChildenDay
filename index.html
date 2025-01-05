@@ -7,9 +7,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&display=swap" rel="stylesheet">
-
-
-
     <styles>
         * {
     margin: 0;
@@ -390,6 +387,7 @@ function downloadCert() {
             }
         ],
         defaultStyle: {
+            font: 'Helvetica',
             fontSize: 16
         },
         styles: {
@@ -431,16 +429,6 @@ function compare() {
     `;
 }
 
-           <!-- เพิ่ม Font Thai -->
-
-        pdfMake.fonts = {
-            THSarabun: {
-                normal: 'THSarabun.ttf',
-                bold: 'THSarabun-Bold.ttf',
-                italics: 'THSarabun-Italic.ttf',
-                bolditalics: 'THSarabun-BoldItalic.ttf'
-            }
-        }
     </script>
 </body>
 </html>
