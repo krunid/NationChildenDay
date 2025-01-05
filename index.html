@@ -1,364 +1,86 @@
 <!DOCTYPE html>
-<html lang="th">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>แบบทดสอบวันเด็กแห่งชาติ</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&display=swap" rel="stylesheet">
-<style>
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: 'Sarabun', sans-serif;
-    }
-
-    body {
-        background: #f0f2f5;
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 20px;
-    }
-
-    .modal {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0,0,0,0.5);
-        z-index: 1001;
-    }
-
-    .modal-content {
-        background: white;
-        width: 90%;
-        max-width: 500px;
-        margin: 100px auto;
-        padding: 30px;
-        border-radius: 15px;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-        animation: slideIn 0.3s ease-out;
-    }
-
-    .modal-header {
-        text-align: center;
-        margin-bottom: 20px;
-    }
-
-    .modal-body {
-        margin-bottom: 20px;
-    }
-
-    .modal-footer {
-        text-align: center;
-    }
-
-    .btn {
-        background: #4CAF50;
-        color: white;
-        border: none;
-        padding: 12px 30px;
-        border-radius: 8px;
-        font-size: 16px;
-        cursor: pointer;
-        transition: all 0.3s;
-        margin: 10px;
-    }
-
-    .btn:hover {
-        background: #45a049;
-        transform: translateY(-2px);
-    }
-
-    @keyframes slideIn {
-        from {
-            transform: translateY(-100px);
-            opacity: 0;
-        }
-        to {
-            transform: translateY(0);
-            opacity: 1;
-        }
-    }
-
-    @media (max-width: 600px) {
-        .modal-content {
-            margin: 50px auto;
-            padding: 20px;
-        }
-
-        .btn {
-            width: 100%;
-            margin: 5px 0;
-        }
-    }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>วันเด็กแห่งชาติ - แบบทดสอบ</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.70/pdfmake.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.70/vfs_fonts.js"></script>
 </head>
 <body>
-    <!-- Popup Modal -->
-    <div id="popup" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 id="popup-title">แจ้งเตือน</h2>
-            </div>
-            <div class="modal-body">
-                <p id="popup-message">ข้อความแจ้งเตือน</p>
-            </div>
-            <div class="modal-footer">
-                <button class="btn" onclick="closePopup()">ตกลง</button>
-            </div>
-        </div>
-    </div>
+  <h1>แบบทดสอบวันเด็กแห่งชาติ</h1>
+  <form id="quiz-form">
+    <ol>
+      <!-- Question 1 -->
+      <li>
+        ใครเป็นผู้กำหนดให้วันเด็กแห่งชาติในประเทศไทย?
+        <ul>
+          <li><input type="radio" name="q1" value="a"> ก. พระบาทสมเด็จพระจุลจอมเกล้าเจ้าอยู่หัว</li>
+          <li><input type="radio" name="q1" value="b"> ข. รัฐบาลไทย</li>
+          <li><input type="radio" name="q1" value="c"> ค. องค์การสหประชาชาติ</li>
+          <li><input type="radio" name="q1" value="d"> ง. กระทรวงศึกษาธิการ</li>
+        </ul>
+      </li>
+      <!-- Add more questions here -->
+    </ol>
+    <button type="button" onclick="checkAnswers()">ส่งคำตอบ</button>
+  </form>
 
-    <div class="modal" id="nameModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>ยินดีต้อนรับ</h2>
-            </div>
-            <div class="modal-body">
-                <div class="input-group">
-                    <label for="studentName">กรุณากรอกชื่อ-นามสกุล</label>
-                    <input type="text" id="studentName" placeholder="เช่น สมชาย ใจดี">
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn" onclick="startQuiz()">เริ่มทำแบบทดสอบ</button>
-            </div>
-        </div>
-    </div>
+  <div id="result" style="margin-top: 20px;"></div>
 
-    <div class="quiz-screen" id="quizScreen">
-        <div class="progress"><div id="prog"></div></div>
-        <div id="quiz"></div>
-        <div id="result" style="display:none;"></div>
-    </div>
-
-<script>
-    // ฟังก์ชันสำหรับ Popup
-    function showPopup(message) {
-        document.getElementById('popup-message').textContent = message;
-        document.getElementById('popup').style.display = 'block';
-    }
-
-    function closePopup() {
-        document.getElementById('popup').style.display = 'none';
-    }
-
-    // คำถาม
-    const q = [
-        {q:"วันเด็กตรงกับวันใด?",o:["เสาร์ที่2 มกราคม","อาทิตย์ที่2 มกราคม","เสาร์แรก มกราคม","อาทิตย์แรก มกราคม"],c:0},
-        // เพิ่มคำถามอื่นๆ ที่นี่
-    ];
-
-    const n = q.length;
-    let i = 0, s = 0, ans = [], name = '';
-
-    window.onload = () => {
-        document.getElementById('nameModal').style.display = 'block';
+  <script>
+    const answers = {
+      q1: 'b',
+      // Add answers for more questions here
     };
 
-    function startQuiz() {
-        name = document.getElementById('studentName').value.trim();
-        if (!name) {
-            showPopup('กรุณากรอกชื่อ-นามสกุล');
-            return;
+    function checkAnswers() {
+      const form = document.getElementById('quiz-form');
+      const resultDiv = document.getElementById('result');
+      const formData = new FormData(form);
+
+      let score = 0;
+      let totalQuestions = Object.keys(answers).length;
+
+      resultDiv.innerHTML = '';
+
+      for (const [key, value] of Object.entries(answers)) {
+        const userAnswer = formData.get(key);
+        if (userAnswer === value) {
+          score++;
+          resultDiv.innerHTML += `<p>ข้อ ${key.replace('q', '')}: <span style="color: green;">ถูก</span></p>`;
+        } else {
+          resultDiv.innerHTML += `<p>ข้อ ${key.replace('q', '')}: <span style="color: red;">ผิด</span></p>`;
         }
-        document.getElementById('nameModal').style.display = 'none';
-        document.getElementById('quizScreen').style.display = 'block';
-        show();
+      }
+
+      const percentage = (score / totalQuestions) * 100;
+      resultDiv.innerHTML += `<p>คะแนนรวม: ${score}/${totalQuestions} (${percentage.toFixed(2)}%)</p>`;
+
+      if (percentage >= 70) {
+        resultDiv.innerHTML += '<p>ยินดีด้วย! คุณผ่านการทดสอบ</p>';
+        generateCertificate(score, totalQuestions);
+      } else {
+        resultDiv.innerHTML += '<p>ขออภัย คุณไม่ผ่านการทดสอบ</p>';
+      }
     }
 
-// แสดงคำถาม
-
-function show() {
-    if (i >= n) {
-        end();
-        return;
-    }
-
-    // อัปเดตความกว้างของ progress bar
-    document.getElementById('prog').style.width = ((i + 1) / n * 100) + "%";
-
-    // สร้าง HTML ของคำถามโดยใช้ template string
-    const questionHTML = `
-        <div class="question">
-            <h3>ข้อที่ ${i + 1}</h3>
-            <p>${q[i].q}</p>
-            ${q[i].o.map((x, j) => `<div class="option" onclick="pick(${j})">${x}</div>`).join('')}
-        </div>
-    `;
-
-    // ใส่ HTML ลงใน element ที่มี id "quiz"
-    document.getElementById('quiz').innerHTML = questionHTML;
-}
-
-
-// เลือกคำตอบ
-function pick(x) {
-    const options = document.querySelectorAll('.option');
-    ans[i] = x;
-    q[i].o.forEach((_,j) => {
-        if(j === q[i].c) options[j].classList.add('correct');
-        else if(j === x) options[j].classList.add('incorrect');
-    });
-    if(x === q[i].c) s++;
-    document.querySelector('.score-number').textContent = ${s}/${n};
-    setTimeout(() => {i++; show();}, 1500);
-}
-
-// จบแบบทดสอบ
-function end() {
-    const p = (s/n*100);
-    document.getElementById('quiz').style.display = 'none';
-    document.getElementById('score').style.display = 'none';
-    document.getElementById('result').style.display = 'block';
-    document.getElementById('result').innerHTML = 
-        <h2>ผลการทดสอบ</h2>
-        <p>คุณ ${name}</p>
-        <p>ได้ ${s}/${n} คะแนน (${p.toFixed(2)}%)</p>
-        ${p>=70?
-            <button class="btn" onclick="cert(true)">แสดงเกียรติบัตร</button>
-        :
-            <p style="color:#f44336">คุณได้คะแนนไม่ถึง 70% กรุณาลองใหม่</p>
-            <button class="btn" onclick="location.reload()">เริ่มใหม่</button>
-        }
-        <button class="btn" onclick="compare()">เปรียบเทียบคำตอบ</button>
-    ;
-}
-
-
-// เปรียบเทียบคำตอบ
-function compare() {
-    document.getElementById('result').innerHTML = 
-        <h2>เปรียบเทียบคำตอบ</h2>
-        ${q.map((x,j)=>
-            <div class="question">
-                <p><b>ข้อ ${j+1}:</b> ${x.q}</p>
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0;">
-                    <div style="background:#fff3e0;padding:10px;border-radius:5px;">
-                        <h4>คำตอบของคุณ</h4>
-                        <p>${x.o[ans[j]]}</p>
-                        <p>${ans[j]===x.c?'✓ ถูกต้อง':'✗ ไม่ถูกต้อง'}</p>
-                    </div>
-                    <div style="background:#e8f5e9;padding:10px;border-radius:5px;">
-                        <h4>เฉลย</h4>
-                        <p>${x.o[x.c]}</p>
-                    </div>
-                </div>
-            </div>
-        ).join('')}
-        <button class="btn" onclick="location.reload()">เริ่มใหม่</button>
-    ;
-}
-
-// แสดงเกียรติบัตร
-function cert(fromQuiz=false) {
-    if(!fromQuiz) {
-        alert('กรุณาทำแบบทดสอบก่อนรับเกียรติบัตร');
-        return;
-    }
-    const cert = document.getElementById('result');
-    cert.innerHTML = 
-        <div style="background:#fff;padding:40px;margin:20px auto;max-width:800px;border:2px solid #4CAF50;border-radius:10px;">
-            <h1 style="text-align:center;color:#2E7D32;margin-bottom:30px;">เกียรติบัตร</h1>
-            <h2 style="text-align:center;margin:20px 0;">ขอมอบเกียรติบัตรฉบับนี้ให้แก่</h2>
-            <h2 style="text-align:center;color:#1B5E20;margin:20px 0;">${name}</h2>
-            <p style="text-align:center;font-size:1.2em;margin:20px 0;">ได้ผ่านการทดสอบความรู้เรื่อง "วันเด็กแห่งชาติ"</p>
-            <p style="text-align:center;font-size:1.2em;margin:20px 0;">ด้วยคะแนน ${s} คะแนน จากทั้งหมด ${n} คะแนน</p>
-            <p style="text-align:center;font-size:1.2em;margin:20px 0;">คิดเป็นร้อยละ ${((s/n)*100).toFixed(2)}</p>
-            <p style="text-align:center;margin-top:40px;">ให้ไว้ ณ วันที่ ${new Date().toLocaleDateString('th-TH', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-            })}</p>
-        </div>
-        <div style="text-align:center;margin-top:20px;">
-            <button class="btn" onclick="downloadCert()">ดาวน์โหลดเกียรติบัตร</button>
-            <button class="btn" onclick="compare()">เปรียบเทียบคำตอบ</button>
-            <button class="btn" onclick="location.reload()">เริ่มใหม่</button>
-        </div>
-    ;
-}
-
-function downloadCert() {
-    const docDefinition = {
-        pageSize: 'A4',
-        pageOrientation: 'landscape',
+    function generateCertificate(score, totalQuestions) {
+      const docDefinition = {
         content: [
-            {
-                text: 'เกียรติบัตร',
-                style: 'header',
-                alignment: 'center',
-                margin: [0, 50, 0, 20]
-            },
-            {
-                text: 'ขอมอบเกียรติบัตรฉบับนี้เพื่อแสดงว่า',
-                alignment: 'center',
-                margin: [0, 20, 0, 20]
-            },
-            {
-                text: name,
-                style: 'subheader',
-                alignment: 'center',
-                margin: [0, 10, 0, 20]
-            },
-            {
-                text: 'ได้ผ่านการทดสอบความรู้เรื่อง "วันเด็กแห่งชาติ"',
-                alignment: 'center',
-                margin: [0, 20, 0, 10]
-            },
-            {
-                text: ด้วยคะแนน ${s} คะแนน จากทั้งหมด ${n} คะแนน,
-                alignment: 'center',
-                margin: [0, 20, 0, 20]
-            },
-            {
-                text: คิดเป็นร้อยละ ${((s/n)*100).toFixed(2)},
-                alignment: 'center',
-                margin: [0, 0, 0, 50]
-            },
-            {
-                text: new Date().toLocaleDateString('th-TH', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric'
-                }),
-                alignment: 'center',
-                margin: [0, 50, 0, 0]
-            }
+          { text: 'ใบเกียรติบัตร', style: 'header' },
+          { text: `ขอมอบให้แก่ผู้ที่ผ่านแบบทดสอบวันเด็กแห่งชาติ`, style: 'subheader' },
+          { text: `คะแนนที่ได้: ${score}/${totalQuestions}`, style: 'content' }
         ],
-        defaultStyle: {
-            font: 'THSarabunNew',
-            fontSize: 16
-        },
-            // Define Thai fonts
-  pdfMake.fonts = {
-    THSarabunNew: {
-      normal: 'https://sanwithz.github.io/font/THSarabunNew.ttf',
-      bold: 'https://sanwithz.github.io/font/THSarabunNewBold.ttf',
-      italics: 'https://sanwithz.github.io/font/THSarabunNewItalic.ttf',
-    }
-  };
         styles: {
-            header: {
-                fontSize: 28,
-                bold: true
-            },
-            subheader: {
-                fontSize: 20,
-                bold: true
-            }
+          header: { fontSize: 22, bold: true, alignment: 'center', margin: [0, 20, 0, 10] },
+          subheader: { fontSize: 16, alignment: 'center', margin: [0, 10, 0, 20] },
+          content: { fontSize: 14, alignment: 'center', margin: [0, 10, 0, 10] }
         }
-    };
+      };
 
-    pdfMake.createPdf(docDefinition).download(certificate_${name}.pdf);
-}
-</script>
+      pdfMake.createPdf(docDefinition).download('certificate.pdf');
+    }
+  </script>
 </body>
 </html>
