@@ -6,70 +6,110 @@
     <title>แบบทดสอบวันเด็กแห่งชาติ</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             text-align: center;
-            background-color: #f9f9f9;
+            background: linear-gradient(to bottom, #fdfcfb, #e2d1c3);
             color: #333;
+            margin: 0;
+            padding: 0;
         }
         .quiz-container {
-            margin: 20px auto;
+            margin: 40px auto;
             padding: 20px;
-            max-width: 600px;
-            background-color: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
+            max-width: 700px;
+            background: #ffffff;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+        }
+        .quiz-container h1 {
+            font-size: 2.2em;
+            color: #4CAF50;
         }
         .question {
-            font-size: 1.2em;
+            font-size: 1.5em;
             margin-bottom: 20px;
+            color: #ff5722;
+            font-weight: bold;
         }
         .options button {
             display: block;
             margin: 10px auto;
             padding: 10px 20px;
-            font-size: 1em;
-            background-color: #4caf50;
+            font-size: 1.1em;
+            background: #4caf50;
             color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
             cursor: pointer;
+            transition: background 0.3s ease;
+            width: 100%;
+            max-width: 400px;
+            text-align: left;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         .options button:hover {
-            background-color: #45a049;
+            background: #388e3c;
         }
         .timer {
             font-size: 1.2em;
             margin-top: 10px;
+            color: #ff5722;
         }
         .result {
-            font-size: 1.5em;
+            font-size: 1.8em;
             margin-top: 20px;
+            color: #333;
         }
         .explanation {
             font-size: 1em;
-            margin-top: 10px;
-            color: #555;
+            margin-top: 15px;
+            color: #757575;
+        }
+        .answer-review {
+            text-align: left;
+            margin-top: 30px;
+            font-size: 1.1em;
+        }
+        .answer-review div {
+            margin-bottom: 15px;
+            padding: 10px;
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        .question-number {
+            font-size: 1.2em;
+            color: #3f51b5;
+            margin-bottom: 10px;
+        }
+        button {
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
     <div class="quiz-container" id="quiz-container">
         <div id="intro">
-            <h1>ยินดีต้อนรับวันเด็กแห่งชาติ! ✨</h1>
-            <p>แบบทดสอบมีจำนวน 10 ข้อ คุณมีเวลา 30 วินาทีต่อคำถาม</p>
-            <p>เลือกคำตอบที่ถูกต้องที่สุด ระบบจะแจ้งผลคะแนนพร้อมเฉลยในตอนท้าย</p>
-            <button onclick="startQuiz()">เริ่มแบบทดสอบ ✅</button>
+            <h1>แบบทดสอบวันเด็กแห่งชาติ 🎉</h1>
+            <p>ยินดีต้อนรับสู่แบบทดสอบวันเด็กแห่งชาติ</p>
+            <p>แบบทดสอบนี้ประกอบด้วยจำนวน 10 ข้อ</p>
+            <p>คุณมีเวลา 5 วินาทีต่อข้อ กรุณาเลือกคำตอบที่ถูกต้องที่สุด</p>
+            <p>เมื่อจบแบบทดสอบ ระบบจะแสดงผลคะแนนพร้อมเฉลยคำตอบ</p>
+            <button onclick="startQuiz()">เริ่มแบบทดสอบ 🚀</button>
         </div>
         <div id="quiz" style="display: none;">
+            <div class="question-number" id="question-number"></div>
             <div class="question" id="question"></div>
             <div class="options" id="options"></div>
-            <div class="timer" id="timer">เวลาที่เหลือ: <span id="time">30</span> วินาที</div>
+            <div class="timer" id="timer">⏳ เวลาที่เหลือ: <span id="time">10</span> วินาที</div>
             <div class="explanation" id="explanation" style="display: none;"></div>
         </div>
         <div id="result" style="display: none;">
             <div class="result" id="score"></div>
-            <div id="answers"></div>
-            <button onclick="restartQuiz()">เริ่มใหม่ ✨</button>
+            <div id="answers" class="answer-review"></div>
+            <button onclick="restartQuiz()">เริ่มใหม่ 🔄</button>
         </div>
     </div>
 
@@ -140,7 +180,8 @@
         let currentQuestion = 0;
         let score = 0;
         let timer;
-        let timeLeft = 30;
+        let timeLeft = 10;
+        let userAnswers = [];
 
         function startQuiz() {
             document.getElementById('intro').style.display = 'none';
@@ -151,6 +192,7 @@
         function loadQuestion() {
             if (currentQuestion < questions.length) {
                 const question = questions[currentQuestion];
+                document.getElementById('question-number').innerText = `ข้อที่ ${currentQuestion + 1}/${questions.length}`;
                 document.getElementById('question').innerText = question.question;
                 const optionsContainer = document.getElementById('options');
                 optionsContainer.innerHTML = '';
@@ -171,11 +213,13 @@
 
         function checkAnswer(selectedOption) {
             const explanation = document.getElementById('explanation');
+            userAnswers.push(selectedOption); // เก็บคำตอบที่เลือก
+
             if (selectedOption === questions[currentQuestion].answer) {
                 score++;
-                explanation.innerText = `ถูกต้อง! ${questions[currentQuestion].explanation}`;
+                explanation.innerText = `✔️ ถูกต้อง! ${questions[currentQuestion].explanation}`;
             } else {
-                explanation.innerText = `ผิด! ${questions[currentQuestion].explanation}`;
+                explanation.innerText = `❌ ผิด! คำตอบที่ถูกต้องคือ: ${questions[currentQuestion].options[questions[currentQuestion].answer]} \n ${questions[currentQuestion].explanation}`;
             }
             explanation.style.display = 'block';
             setTimeout(() => {
@@ -186,7 +230,7 @@
 
         function resetTimer() {
             clearInterval(timer);
-            timeLeft = 30;
+            timeLeft = 5;
             document.getElementById('time').innerText = timeLeft;
             timer = setInterval(() => {
                 timeLeft--;
@@ -205,4 +249,28 @@
             document.getElementById('result').style.display = 'block';
             document.getElementById('score').innerText = `คะแนนของคุณ: ${score}/${questions.length}`;
 
-            const answersContainer = document.getElementBy
+            const answersContainer = document.getElementById('answers');
+            answersContainer.innerHTML = '';
+
+            questions.forEach((q, index) => {
+                const userAnswer = userAnswers[index] !== undefined ? questions[index].options[userAnswers[index]] : 'ไม่ตอบ';
+                const isCorrect = userAnswers[index] === q.answer ? '✔️' : '❌';
+                const div = document.createElement('div');
+                div.innerHTML = `<strong>ข้อ ${index + 1}:</strong> ${q.question}<br>` +
+                                `${isCorrect} คำตอบที่คุณเลือก: ${userAnswer}<br>` +
+                                `คำตอบที่ถูกต้อง: ${q.options[q.answer]}<br>` +
+                                `คำอธิบาย: ${q.explanation}`;
+                answersContainer.appendChild(div);
+            });
+        }
+
+        function restartQuiz() {
+            currentQuestion = 0;
+            score = 0;
+            userAnswers = [];
+            document.getElementById('result').style.display = 'none';
+            document.getElementById('intro').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
