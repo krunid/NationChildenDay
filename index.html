@@ -1,94 +1,208 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="th">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>วันเด็กแห่งชาติ - แบบทดสอบ</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.70/pdfmake.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.70/vfs_fonts.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>แบบทดสอบวันเด็กแห่งชาติ</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        .quiz-container {
+            margin: 20px auto;
+            padding: 20px;
+            max-width: 600px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+        .question {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+        .options button {
+            display: block;
+            margin: 10px auto;
+            padding: 10px 20px;
+            font-size: 1em;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .options button:hover {
+            background-color: #45a049;
+        }
+        .timer {
+            font-size: 1.2em;
+            margin-top: 10px;
+        }
+        .result {
+            font-size: 1.5em;
+            margin-top: 20px;
+        }
+        .explanation {
+            font-size: 1em;
+            margin-top: 10px;
+            color: #555;
+        }
+    </style>
 </head>
 <body>
-  <h1>แบบทดสอบวันเด็กแห่งชาติ</h1>
-  <form id="quiz-form">
-    <ol>
-      <!-- Question 1 -->
-      <li>
-        ใครเป็นผู้กำหนดให้วันเด็กแห่งชาติในประเทศไทย?
-        <ul>
-          <li><input type="radio" name="q1" value="a"> ก. พระบาทสมเด็จพระจุลจอมเกล้าเจ้าอยู่หัว</li>
-          <li><input type="radio" name="q1" value="b"> ข. รัฐบาลไทย</li>
-          <li><input type="radio" name="q1" value="c"> ค. องค์การสหประชาชาติ</li>
-          <li><input type="radio" name="q1" value="d"> ง. กระทรวงศึกษาธิการ</li>
-        </ul>
-      </li>
-      <!-- Add more questions here -->
-    </ol>
-    <button type="button" onclick="checkAnswers()">ส่งคำตอบ</button>
-  </form>
+    <div class="quiz-container" id="quiz-container">
+        <div id="intro">
+            <h1>ยินดีต้อนรับวันเด็กแห่งชาติ! ✨</h1>
+            <p>แบบทดสอบมีจำนวน 10 ข้อ คุณมีเวลา 30 วินาทีต่อคำถาม</p>
+            <p>เลือกคำตอบที่ถูกต้องที่สุด ระบบจะแจ้งผลคะแนนพร้อมเฉลยในตอนท้าย</p>
+            <button onclick="startQuiz()">เริ่มแบบทดสอบ ✅</button>
+        </div>
+        <div id="quiz" style="display: none;">
+            <div class="question" id="question"></div>
+            <div class="options" id="options"></div>
+            <div class="timer" id="timer">เวลาที่เหลือ: <span id="time">30</span> วินาที</div>
+            <div class="explanation" id="explanation" style="display: none;"></div>
+        </div>
+        <div id="result" style="display: none;">
+            <div class="result" id="score"></div>
+            <div id="answers"></div>
+            <button onclick="restartQuiz()">เริ่มใหม่ ✨</button>
+        </div>
+    </div>
 
-  <div id="result" style="margin-top: 20px;"></div>
+    <script>
+        const questions = [
+            {
+                question: "วันเด็กแห่งชาติในประเทศไทย ตรงกับวันใด?",
+                options: ["วันเสาร์ที่สองของเดือนมกราคม", "วันอาทิตย์ที่สองของเดือนมกราคม", "วันเสาร์แรกของเดือนมกราคม", "วันอาทิตย์แรกของเดือนมกราคม"],
+                answer: 0,
+                explanation: "วันเด็กแห่งชาติในประเทศไทยจะจัดขึ้นในวันเสาร์ที่สองของเดือนมกราคมของทุกปี"
+            },
+            {
+                question: "คำขวัญวันเด็กแห่งชาติ มักจะเน้นเรื่องใด?",
+                options: ["การเรียนรู้และคุณธรรม", "การเล่นและความสนุก", "การทำงานและวินัย", "การช่วยเหลือสังคม"],
+                answer: 0,
+                explanation: "คำขวัญวันเด็กแห่งชาติมักเน้นการเรียนรู้และการปลูกฝังคุณธรรมในเด็ก"
+            },
+            {
+                question: "ใครเป็นผู้ให้คำขวัญวันเด็กแห่งชาติในประเทศไทย?",
+                options: ["นายกรัฐมนตรี", "ประธานรัฐสภา", "รัฐมนตรีว่าการกระทรวงศึกษาธิการ", "ประธานองคมนตรี"],
+                answer: 0,
+                explanation: "คำขวัญวันเด็กแห่งชาติจะมอบโดยนายกรัฐมนตรีของประเทศไทย"
+            },
+            {
+                question: "กิจกรรมหลักในวันเด็กแห่งชาติคืออะไร?",
+                options: ["การแจกของขวัญ", "การเปิดสถานที่สำคัญให้เด็กเยี่ยมชม", "การจัดประกวดร้องเพลง", "การแข่งกีฬา"],
+                answer: 1,
+                explanation: "กิจกรรมหลักคือการเปิดสถานที่สำคัญ เช่น ทำเนียบรัฐบาล ให้เด็กเข้าเยี่ยมชม"
+            },
+            {
+                question: "วันเด็กแห่งชาติเริ่มต้นขึ้นครั้งแรกในปีใด?",
+                options: ["พ.ศ. 2498", "พ.ศ. 2500", "พ.ศ. 2505", "พ.ศ. 2510"],
+                answer: 0,
+                explanation: "วันเด็กแห่งชาติเริ่มต้นครั้งแรกในปี พ.ศ. 2498"
+            },
+            {
+                question: "วันเด็กแห่งชาติถูกจัดขึ้นเพื่อวัตถุประสงค์ใด?",
+                options: ["ส่งเสริมการเรียนรู้ของเด็ก", "สร้างความสนุกสนาน", "พัฒนาความคิดสร้างสรรค์", "ทั้งหมดที่กล่าวมา"],
+                answer: 3,
+                explanation: "วันเด็กแห่งชาติมุ่งเน้นการส่งเสริมการเรียนรู้ ความสนุก และความคิดสร้างสรรค์ของเด็ก"
+            },
+            {
+                question: "สถานที่ใดที่เด็กมักนิยมไปในวันเด็กแห่งชาติ?",
+                options: ["ทำเนียบรัฐบาล", "สนามเด็กเล่น", "พิพิธภัณฑ์", "ทั้งหมดที่กล่าวมา"],
+                answer: 3,
+                explanation: "เด็กมักนิยมไปสถานที่สำคัญ เช่น ทำเนียบรัฐบาล และพิพิธภัณฑ์ในวันเด็ก"
+            },
+            {
+                question: "คำขวัญวันเด็กแห่งชาติปี 2568 คืออะไร?",
+                options: ["รู้หน้าที่ มีวินัย ใฝ่ความดี", "เรียนดี กีฬาเด่น เน้นคุณธรรม", "ทุกโอกาส คือ การเรียนรู้ พร้อมปรับตัวสู่อนาคตที่เลือกเอง", "เด็กไทย ใส่ใจคุณธรรม"],
+                answer: 2,
+                explanation: "คำขวัญปี 2568 คือ 'ทุกโอกาส คือ การเรียนรู้ พร้อมปรับตัวสู่อนาคตที่เลือกเอง'"
+            },
+            {
+                question: "คำว่า 'เด็ก' ในบริบทของวันเด็ก หมายถึงใคร?",
+                options: ["บุคคลที่มีอายุต่ำกว่า 18 ปี", "นักเรียนระดับประถมศึกษา", "เยาวชนที่กำลังศึกษา", "ทั้งหมดที่กล่าวมา"],
+                answer: 0,
+                explanation: "'เด็ก' หมายถึงบุคคลที่มีอายุต่ำกว่า 18 ปีตามกฎหมาย"
+            },
+            {
+                question: "ในวันเด็กแห่งชาติ มีกิจกรรมใดที่ส่งเสริมการเรียนรู้ของเด็ก?",
+                options: ["นิทรรศการวิทยาศาสตร์", "การแสดงละครเด็ก", "การแข่งขันตอบคำถาม", "ทั้งหมดที่กล่าวมา"],
+                answer: 3,
+                explanation: "กิจกรรมต่างๆ เช่น นิทรรศการวิทยาศาสตร์ และการแข่งขันตอบคำถามช่วยส่งเสริมการเรียนรู้ของเด็ก"
+            }
+        ];
 
-  <script>
-    const answers = {
-      q1: 'b',
-      // Add answers for more questions here
-    };
+        let currentQuestion = 0;
+        let score = 0;
+        let timer;
+        let timeLeft = 30;
 
-    function checkAnswers() {
-      const form = document.getElementById('quiz-form');
-      const resultDiv = document.getElementById('result');
-      const formData = new FormData(form);
-
-      let score = 0;
-      let totalQuestions = Object.keys(answers).length;
-
-      resultDiv.innerHTML = '';
-
-      for (const [key, value] of Object.entries(answers)) {
-        const userAnswer = formData.get(key);
-        if (userAnswer === value) {
-          score++;
-          resultDiv.innerHTML += `<p>ข้อ ${key.replace('q', '')}: <span style="color: green;">ถูก</span></p>`;
-        } else {
-          resultDiv.innerHTML += `<p>ข้อ ${key.replace('q', '')}: <span style="color: red;">ผิด</span></p>`;
+        function startQuiz() {
+            document.getElementById('intro').style.display = 'none';
+            document.getElementById('quiz').style.display = 'block';
+            loadQuestion();
         }
-      }
 
-      const percentage = (score / totalQuestions) * 100;
-      resultDiv.innerHTML += `<p>คะแนนรวม: ${score}/${totalQuestions} (${percentage.toFixed(2)}%)</p>`;
+        function loadQuestion() {
+            if (currentQuestion < questions.length) {
+                const question = questions[currentQuestion];
+                document.getElementById('question').innerText = question.question;
+                const optionsContainer = document.getElementById('options');
+                optionsContainer.innerHTML = '';
 
-      if (percentage >= 70) {
-        resultDiv.innerHTML += '<p>ยินดีด้วย! คุณผ่านการทดสอบ</p>';
-        generateCertificate(score, totalQuestions);
-      } else {
-        resultDiv.innerHTML += '<p>ขออภัย คุณไม่ผ่านการทดสอบ</p>';
-      }
-    }
+                question.options.forEach((option, index) => {
+                    const button = document.createElement('button');
+                    button.innerText = option;
+                    button.onclick = () => checkAnswer(index);
+                    optionsContainer.appendChild(button);
+                });
 
-    function generateCertificate(score, totalQuestions) {
-      const docDefinition = {
-        content: [
-          { text: 'ใบเกียรติบัตร', style: 'header' },
-          { text: `ขอมอบให้แก่ผู้ที่ผ่านแบบทดสอบวันเด็กแห่งชาติ`, style: 'subheader' },
-          { text: `คะแนนที่ได้: ${score}/${totalQuestions}`, style: 'content' }
-        ],
-        // Define Thai fonts
-  pdfMake.fonts = {
-    THSarabunNew: {
-      normal: 'https://sanwithz.github.io/font/THSarabunNew.ttf',
-      bold: 'https://sanwithz.github.io/font/THSarabunNewBold.ttf',
-      italics: 'https://sanwithz.github.io/font/THSarabunNewItalic.ttf',
-    }
-  },
-        styles: {
-          header: { fontSize: 22, bold: true, alignment: 'center', margin: [0, 20, 0, 10] },
-          subheader: { fontSize: 16, alignment: 'center', margin: [0, 10, 0, 20] },
-          content: { fontSize: 14, alignment: 'center', margin: [0, 10, 0, 10] }
+                document.getElementById('explanation').style.display = 'none';
+                resetTimer();
+            } else {
+                endQuiz();
+            }
         }
-      };
 
-      pdfMake.createPdf(docDefinition).download('certificate.pdf');
-    }
-  </script>
-</body>
-</html>
+        function checkAnswer(selectedOption) {
+            const explanation = document.getElementById('explanation');
+            if (selectedOption === questions[currentQuestion].answer) {
+                score++;
+                explanation.innerText = `ถูกต้อง! ${questions[currentQuestion].explanation}`;
+            } else {
+                explanation.innerText = `ผิด! ${questions[currentQuestion].explanation}`;
+            }
+            explanation.style.display = 'block';
+            setTimeout(() => {
+                currentQuestion++;
+                loadQuestion();
+            }, 3000);
+        }
+
+        function resetTimer() {
+            clearInterval(timer);
+            timeLeft = 30;
+            document.getElementById('time').innerText = timeLeft;
+            timer = setInterval(() => {
+                timeLeft--;
+                document.getElementById('time').innerText = timeLeft;
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    currentQuestion++;
+                    loadQuestion();
+                }
+            }, 1000);
+        }
+
+        function endQuiz() {
+            clearInterval(timer);
+            document.getElementById('quiz').style.display = 'none';
+            document.getElementById('result').style.display = 'block';
+            document.getElementById('score').innerText = `คะแนนของคุณ: ${score}/${questions.length}`;
+
+            const answersContainer = document.getElementBy
